@@ -1,0 +1,11 @@
+.logoLogin {
+  width: 450px;
+}
+
+/* MOBILE VIEW */
+
+@media screen and (max-width: 650px) {
+  .logoLogin {
+    width: 100%;
+  }
+}

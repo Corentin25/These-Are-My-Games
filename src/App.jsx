@@ -8,14 +8,17 @@ import { Error404 } from "./Pages/Error404/Error404";
 
 export function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LogIn />} />
-        <Route element={<MainLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Route>
-        <Route path="*" element={<Error404 />} />
-      </Routes>
-    </Router>
-  )
-};
+    <>
+      <div className="glow-overlay"></div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LogIn />} />
+          <Route element={<MainLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+          <Route path="*" element={<Error404 />} />
+        </Routes>
+      </Router>
+    </>
+  );
+}
