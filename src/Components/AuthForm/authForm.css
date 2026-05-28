@@ -14,10 +14,9 @@
   background-color: var(--whitePrimary);
   box-shadow: 0px 10px 25px #00000033;
   border-radius: 30px;
-  border-bottom: #cbcbcb solid 5px;
+  border-bottom: #cbcbcb solid 6px;
   width: 100%;
   padding: 2rem 2.5rem;
-  /* gap: 20px; */
 }
 
 .form-group {
