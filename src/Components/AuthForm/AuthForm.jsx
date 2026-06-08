@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./authForm.css";
 
 export function AuthForm() {
   const [isLoginMode, setIsLoginMode] = useState(true);
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -28,14 +31,17 @@ export function AuthForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!isLoginMode && !validatePassword(formData.password)) {
-      console.error(
-        "Erreur : Le mot de passe ne respecte pas les critères de sécurité.",
-      );
-      return;
+    if (isLoginMode) {
+      setFormData({ email: "", password: "", confirmPassword: "" });
+      navigate("/dashboard");
+    } else {
+      setFormData({ email: "", password: "", confirmPassword: "" });
+      setIsLoginMode(true);
     }
-    // Simulation temporaire du traitement des données avant mise en place API.
-    console.log("Action soumise :", isLoginMode ? "Connexion" : "Inscription");
+    console.log(
+      "Action soumise :",
+      isLoginMode ? "Utilisateur connecté" : "Utilisateur inscrit",
+    );
     console.log("Données :", formData);
   };
 
@@ -49,7 +55,7 @@ export function AuthForm() {
   const doPasswordsMatch = formData.password === formData.confirmPassword;
 
   const isFormValid = isLoginMode
-    ? isEmailValid && formData.password.length > 0
+    ? isEmailValid && formData.password.length >= 8
     : isEmailValid && isPasswordValid && doPasswordsMatch;
 
   return (
@@ -82,7 +88,9 @@ export function AuthForm() {
             name="password"
             value={formData.password}
             onChange={handleChange}
-            placeholder={!isLoginMode ? "Ex : Toutsauf1234!" : ""}
+            placeholder={
+              !isLoginMode ? "Ex : Toutsauf1234!" : "Minimum 8 caractères"
+            }
             required
           />
           {!isLoginMode && formData.password.length > 0 && (
@@ -104,9 +112,7 @@ export function AuthForm() {
           )}
         </div>
         {isLoginMode && (
-          <div className="forgotten-password">
-            Mot de passe oublié ?
-          </div>
+          <p className="forgotten-password">Mot de passe oublié ?</p>
         )}
         {!isLoginMode && (
           <div className="form-group">

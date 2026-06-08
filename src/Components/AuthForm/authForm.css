@@ -47,13 +47,15 @@
 }
 
 .forgotten-password {
+  align-self: center;
+  max-width: fit-content;
   color: #4d4d4d;
-  cursor: pointer;
   font-size: 12px;
   font-family: inherit;
   text-align: center;
   text-decoration: underline;
   margin-top: 1rem;
+  cursor: pointer;
 }
 
 .submit-btn {
@@ -61,12 +63,12 @@
   color: #ffffff;
   border: none;
   border-radius: 25px;
-  width: 150px;
+  width: 156px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 1rem;
-  padding: 0.7rem 0rem;
+  margin-top: 0.5rem;
+  padding: 0.6rem 0rem;
   transition: background-color 0.3s;
   align-self: center;
 }

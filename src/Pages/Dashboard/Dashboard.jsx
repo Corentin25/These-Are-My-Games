@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GameForm } from "../../Components/GameForm/GameForm";
 import { GameCard } from "../../Components/GameCard/GameCard";
 
@@ -7,9 +7,16 @@ import "./dashboard.css";
 export function Dashboard() {
   const [isAddGame, setIsAddGame] = useState(false);
 
-  const [gamesList, setGamesList] = useState([]);
+  const [gamesList, setGamesList] = useState(() => {
+    const savedGames = localStorage.getItem("tamg_games");
+    return savedGames ? JSON.parse(savedGames) : [];
+  });
 
   const [gameToEdit, setGameToEdit] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("tamg_games", JSON.stringify(gamesList));
+  }, [gamesList]);
 
   const toggleAddGame = () => {
     setIsAddGame(!isAddGame);

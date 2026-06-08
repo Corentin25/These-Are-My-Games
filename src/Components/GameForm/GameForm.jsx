@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import "./gameForm.css";
 
 export function GameForm({ toggleAddGame, addGameToList, gameToEdit }) {
@@ -14,8 +13,8 @@ export function GameForm({ toggleAddGame, addGameToList, gameToEdit }) {
   });
 
   const [imageFile, setImageFile] = useState(null);
-
   const [imagePreview, setImagePreview] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     if (gameToEdit) {
@@ -48,19 +47,47 @@ export function GameForm({ toggleAddGame, addGameToList, gameToEdit }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    let finalImageUrl = imagePreview;
+    let uploadError = false;
+
+    if (imageFile) {
+      setIsUploading(true);
+
+      const cloudinaryData = new FormData();
+      cloudinaryData.append("file", imageFile);
+      cloudinaryData.append("upload_preset", "tamg_images");
+
+      try {
+        const response = await fetch(
+          "https://api.cloudinary.com/v1_1/drncm14ot/image/upload",
+          {
+            method: "POST",
+            body: cloudinaryData,
+          },
+        );
+
+        const data = await response.json();
+        finalImageUrl = data.secure_url;
+      } catch (error) {
+        console.error("Erreur lors du téléchargement :", error);
+        alert("Une erreur est survenue lors de l'envoi de l'image.");
+        uploadError = true;
+      } finally {
+        setIsUploading(false);
+      }
+    }
+
+    if (uploadError) return;
 
     const finalData = {
       ...formData,
       id: gameToEdit ? gameToEdit.id : null,
-      image: imageFile
-        ? imageFile.name
-        : gameToEdit
-          ? gameToEdit.image
-          : "Aucune image fournie",
-      imagePreview: imagePreview,
+      imagePreview: finalImageUrl,
     };
+
     addGameToList(finalData);
 
     setFormData({
@@ -130,6 +157,7 @@ export function GameForm({ toggleAddGame, addGameToList, gameToEdit }) {
                 name="hours"
                 value={formData.hours}
                 onChange={handleChange}
+                min="0"
                 placeholder="Ex : 53"
               />
             </div>
@@ -204,9 +232,13 @@ export function GameForm({ toggleAddGame, addGameToList, gameToEdit }) {
           <button
             type="submit"
             className="submit-game-btn"
-            disabled={!isFormValid}
+            disabled={!isFormValid || isUploading}
           >
-            {gameToEdit ? "Modifier" : "Valider"}
+            {isUploading
+              ? "Envoi en cours..."
+              : gameToEdit
+                ? "Modifier"
+                : "Valider"}
           </button>
         </div>
       </form>
